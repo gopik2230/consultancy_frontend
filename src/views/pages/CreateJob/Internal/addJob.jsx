@@ -1,4 +1,4 @@
-import { Typography, MenuItem, TextField, Box, RadioGroup, Radio, FormControlLabel, Button } from '@mui/material';
+import { Typography, MenuItem, TextField, Box, RadioGroup, Radio, FormControlLabel, Button, Card, IconButton } from '@mui/material';
 import moment from 'moment';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -6,21 +6,50 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ErrorField from 'ui-component/ErrorField';
 import { useState } from 'react';
+import { AddCircle, RemoveCircle } from '@mui/icons-material';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 
 const ExternalJobList = () => {
     const [step, setStep] = useState(1); // NEW
+    const floatRegx = /^\d*\.?\d*$/
     const [jobDetails, setJobDetails] = useState({
         job_title: "", job_description: "", job_category: "", priority_skills: "",
         expeirence_from: "", expeirence_to: "", experience_type: "", location: "",
         budget_from: "", budget_to: "", notice_period: "", hiring_process: "",
         job_duration_from: null, job_duration_to: null, interview_date_from: null, interview_date_to: null,
-        company_name: "", job_type: "", work_mode: "", client_name: "",  // EXAMPLE second page fields
+        // EXAMPLE second page fields
     });
     const [errors, setErrors] = useState({});
-console.log("jobDetails ",jobDetails)
+    const [errorsArray, setErrorsArray] = useState([]);
+    const [questionArray, setQuestionArray] = useState([
+        { question: '', answer: '', answerType: '' }
+    ]);
+
+    const handleQuestionChange = (index, field, value) => {
+        const updated = [...questionArray];
+        const updatedErrosArray = [...errorsArray]
+        updated[index][field] = value;
+        updatedErrosArray[index][field] = "";
+        if(field === "answerType") updated[index]['answer'] = ""
+        setQuestionArray(updated);
+        setErrorsArray(updatedErrosArray)
+    };
+
+    const handleAdd = () => {
+        setQuestionArray([...questionArray, { question: '', answer: '', answerType: '' }]);
+    };
+
+    const handleRemove = (index) => {
+        const updated = [...questionArray];
+        updated.splice(index, 1);
+        setQuestionArray(updated);
+    };
+
+
+
+    // console.log("questionArray ", questionArray)
     const validateFields = (fieldsToValidate) => {
         let newErrors = {};
 
@@ -42,27 +71,60 @@ console.log("jobDetails ",jobDetails)
             "interview_date_from", "interview_date_to", "budget_from", "budget_to"
         ];
         if (validateFields(fieldsPage1)) {
-            setStep(2);
+        setStep(2);
         }
     };
 
-    const handleFinalSubmit = () => {
-        const fieldsPage2 = ["company_name", "job_type", "work_mode", "client_name"];
-        if (validateFields(fieldsPage2)) {
-            console.log("Final Submitted Values:", jobDetails);
-            // Your submit logic here (API call etc.)
+    const validationStep2 = () => {
+        const newErrors = questionArray.map((q) => {
+            const errs = {};
+    
+            if (!q.question.trim()) {
+                errs.question = 'Question is required';
+            }
+    
+            if (!q.answerType) {
+                errs.answerType = 'Answer type is required';
+            }
+    
+            if (
+                (q.answerType === 'numeric' || q.answerType === 'text-numeric') &&
+                !q.answer.trim()
+            ) {
+                errs.answer = 'Answer is required';
+            }
+    
+            return errs;
+        });
+    
+        const hasErrors = newErrors.some(err => Object.keys(err).length > 0);
+    
+        if (hasErrors) {
+            setErrorsArray(newErrors);
+            return false; 
         }
+        return true
+    }
+
+    const handleFinalSubmit = () => {
+        const validation = validationStep2()
+        console.log("validation ",validation)
+        if(validation) console.log('questionArray ',questionArray)
+       
+        console.log("Final Submitted Values:", jobDetails);
     };
 
     const handleChange = (e, field) => {
         const value = field ? e : e.target.value;
         const name = field || e.target.name;
-        console.log('namevaleu ',name,value)
+        console.log('namevaleu ', name, value)
         setJobDetails(prev => ({ ...prev, [name]: value }));
 
         // Clear error immediately for this field
         setErrors(prev => ({ ...prev, [name]: '' }));
     };
+
+
 
     return (
         <MainCard>
@@ -72,7 +134,7 @@ console.log("jobDetails ",jobDetails)
                     <Box sx={{ display: "flex", flexDirection: "column", width: { xs: "100%", sm: "45%" }, gap: 2 }}>
                         {/* (your first page fields - as you wrote earlier) */}
                         {/* Job Title, Job Description etc */}
-                        {[ { label: 'Job Title', name: 'job_title' }, { label: 'Job Description', name: 'job_description' }, { label: 'Job Category', name: 'job_category' }, { label: 'Top Priority Skills', name: 'priority_skills' }].map((item) => (
+                        {[{ label: 'Job Title', name: 'job_title' }, { label: 'Job Description', name: 'job_description' }, { label: 'Job Category', name: 'job_category' }, { label: 'Top Priority Skills', name: 'priority_skills' }].map((item) => (
                             <Box key={item.name} sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                                 <Typography sx={{ fontWeight: "500" }}>{item.label}</Typography>
                                 <TextField
@@ -89,17 +151,17 @@ console.log("jobDetails ",jobDetails)
                         {/* Experience */}
                         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                             <Typography sx={{ fontWeight: "500" }}>Experience</Typography>
-                            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", alignItems:"center" }}>
                                 <TextField
                                     value={jobDetails.expeirence_from}
-                                    onChange={handleChange}
+                                    onChange={(e) => {if(floatRegx.test(e.target.value)) handleChange(e)}}
                                     name='expeirence_from'
                                     placeholder='From'
                                     error={Boolean(errors.expeirence_from)}
                                 />
                                 <TextField
                                     value={jobDetails.expeirence_to}
-                                    onChange={handleChange}
+                                    onChange={(e) => {if(floatRegx.test(e.target.value)) handleChange(e)}}
                                     name='expeirence_to'
                                     placeholder='To'
                                     error={Boolean(errors.expeirence_to)}
@@ -112,7 +174,7 @@ console.log("jobDetails ",jobDetails)
                         </Box>
 
                         {/* Experience Type */}
-                        <Box sx={{ display: "flex", gap: 1 }}>
+                        <Box sx={{ display: "flex", gap: 1, flexDirection:"column" }}>
                             <RadioGroup
                                 row
                                 name='experience_type'
@@ -146,7 +208,7 @@ console.log("jobDetails ",jobDetails)
                             <Box sx={{ display: "flex", gap: 1, alignItems: "center", justifyContent: "space-between" }}>
                                 <TextField
                                     value={jobDetails.budget_from}
-                                    onChange={handleChange}
+                                    onChange={(e) => {if(floatRegx.test(e.target.value)) handleChange(e)}}
                                     name='budget_from'
                                     placeholder='From (LPA)'
                                     error={Boolean(errors.budget_from)}
@@ -154,7 +216,7 @@ console.log("jobDetails ",jobDetails)
                                 <Typography>To</Typography>
                                 <TextField
                                     value={jobDetails.budget_to}
-                                    onChange={handleChange}
+                                    onChange={(e) => {if(floatRegx.test(e.target.value)) handleChange(e)}}
                                     name='budget_to'
                                     placeholder='To (LPA)'
                                     error={Boolean(errors.budget_to)}
@@ -254,43 +316,77 @@ console.log("jobDetails ",jobDetails)
             {step === 2 && (
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                     <Typography variant='h5'>Screening Questionnaire</Typography>
-                    <Typography sx={{fontSize:"14px"}}>Writing a custom screen</Typography>
+                    <Typography sx={{ fontSize: "14px" }}>Writing a custom screen question.</Typography>
 
-                    <TextField
-                        label="Company Name"
-                        name="company_name"
-                        value={jobDetails.company_name}
-                        onChange={handleChange}
-                        error={Boolean(errors.company_name)}
-                    />
-                    {errors.company_name && <ErrorField>{errors.company_name}</ErrorField>}
+                    {questionArray?.map((item, index) => (
+                        <Card
+                            key={index}
+                            sx={{
+                                p: 2,
+                                border: '1px solid #ccc',
+                                borderRadius: 2,
+                                position: 'relative',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 2,
+                            }}
+                        >
+                             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                                <Typography sx={{ fontWeight: "500" }}>Question</Typography>
+                                <TextField
+                                    fullWidth
+                                    // label="Question"
+                                    value={item.question}
+                                    onChange={(e) => handleQuestionChange(index, 'question', e.target.value)}
+                                    error={Boolean(errorsArray[index]?.question)}
+                                    helperText={errorsArray[index]?.question}
+                                />
+                            </Box>
+                             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                                <Typography sx={{ fontWeight: "500" }}>Answer Type</Typography>
+                                <TextField
+                                    select
+                                    value={item.answerType}
+                                    name='answerType'
+                                    onChange={(e) => handleQuestionChange(index, 'answerType', e.target.value)}
+                                    error={Boolean(errorsArray[index]?.answerType)}
+                                    helperText={errorsArray[index]?.answerType}
+                                >
+                                    <MenuItem value="yes/no">Yes / No</MenuItem>
+                                    <MenuItem value="numeric">Numeric</MenuItem>
+                                    <MenuItem value="text-numeric">Text/Numeric</MenuItem>
+                                </TextField>
+                                {errors.answerType && <ErrorField>{errors.answerType}</ErrorField>}
+                            </Box>
+                        
+                           {item?.answerType !== '' && item?.answerType !== 'yes/no' && <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                            <Typography sx={{ fontWeight: "500" }}>Answer</Typography>
+                                <TextField
+                                    fullWidth
+                                    value={item.answer}
+                                    error={Boolean(errorsArray[index]?.answer)}
+                                    helperText={errorsArray[index]?.answer}
+                                    onChange={(e) => {
+                                        let value = e.target.value;
+                                        if(item.answerType == 'numeric') {
+                                            if (/^\d*$/.test(value)) {
+                                                handleQuestionChange(index, 'answer', value);
+                                            }
+                                        } else {
+                                            handleQuestionChange(index, 'answer', value);
+                                        }
+                                    }}
+                                />
+                                {errors.answerType && <ErrorField>{errors.answerType}</ErrorField>}
+                            </Box>}
 
-                    <TextField
-                        label="Job Type"
-                        name="job_type"
-                        value={jobDetails.job_type}
-                        onChange={handleChange}
-                        error={Boolean(errors.job_type)}
-                    />
-                    {errors.job_type && <ErrorField>{errors.job_type}</ErrorField>}
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: 1, mt: 1 }}>
+                                <Button variant='outlined' color='primary' onClick={handleAdd} startIcon={<AddCircle />}>Add Question</Button>
+                                <Button variant='outlined' color='error' onClick={(e) => handleRemove(index)} startIcon={<RemoveCircle />} disabled={questionArray?.length == 1}>Remove Question</Button>
+                            </Box>
+                        </Card>
+                    ))}
 
-                    <TextField
-                        label="Work Mode (Remote/On-site)"
-                        name="work_mode"
-                        value={jobDetails.work_mode}
-                        onChange={handleChange}
-                        error={Boolean(errors.work_mode)}
-                    />
-                    {errors.work_mode && <ErrorField>{errors.work_mode}</ErrorField>}
-
-                    <TextField
-                        label="Client Name"
-                        name="client_name"
-                        value={jobDetails.client_name}
-                        onChange={handleChange}
-                        error={Boolean(errors.client_name)}
-                    />
-                    {errors.client_name && <ErrorField>{errors.client_name}</ErrorField>}
 
                     <Box sx={{ mt: 2, display: "flex", gap: 2 }}>
                         <Button variant="outlined" onClick={() => setStep(1)}>Back</Button>
