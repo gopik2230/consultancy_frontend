@@ -1,12 +1,13 @@
 import dashboard from './dashboard';
+import { getSideMenu } from './other';
 import pages from './pages';
 import utilities from './utilities';
-import sideMenu from './other';
+
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [ sideMenu]
+  items: [ getSideMenu("candidate")]
 };
 
 export default menuItems;
