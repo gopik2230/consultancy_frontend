@@ -8,12 +8,14 @@ import ErrorField from 'ui-component/ErrorField';
 import { useState } from 'react';
 import { AddCircle, RemoveCircle } from '@mui/icons-material';
 import axios from 'axios';
+import useToast from 'ui-component/Toast';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 
 const ExternalJobList = () => {
     const [step, setStep] = useState(1); // NEW
+    const showToast = useToast();
     const floatRegx = /^\d*\.?\d*$/
     const user_id = JSON.parse(localStorage.getItem("userData"))?.id || null
     const [jobDetails, setJobDetails] = useState({
@@ -143,8 +145,13 @@ const ExternalJobList = () => {
         try {
             const response = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}internal-job`, reqData)
             console.log("response ")
+            if(response?.data?.message) {
+                showToast(response?.data?.message , 'success')
+            }
         } catch(error) {
             console.log("what so error ",error)
+            showToast(error?.response?.data?.message , 'error')
+
         }
     }
 

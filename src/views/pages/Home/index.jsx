@@ -3,10 +3,26 @@ import Typography from '@mui/material/Typography';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
+import axios from 'axios';
+import { useEffect } from 'react';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const Home = () => (
+const Home = () => {
+  const getApi = async() => {
+    try {
+        const getres = await axios.get(`${import.meta.env.VITE_APP_BASE_URL}internal/list`)
+        console.log("getres ",getres)
+    } catch(err) {
+      console.log("err ",err)
+    }
+  }
+
+  useEffect(() => {
+    getApi()
+  },[])
+  console.log("main as")
+  return(
   <MainCard title="Sample Card">
     <Typography variant="body2">
       Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif ad
@@ -15,6 +31,7 @@ const Home = () => (
       descent molls anim id est labours.
     </Typography>
   </MainCard>
-);
+  )
+}
 
 export default Home;
