@@ -1,4 +1,4 @@
-import { Typography, MenuItem, TextField, Box, RadioGroup, Radio, FormControlLabel, Button, Card, IconButton } from '@mui/material';
+import { Typography, MenuItem, TextField, Select, Box, RadioGroup, Radio, FormControlLabel, Button, Card, IconButton } from '@mui/material';
 import moment from 'moment';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -7,6 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ErrorField from 'ui-component/ErrorField';
 import { useState } from 'react';
 import { AddCircle, RemoveCircle } from '@mui/icons-material';
+import axios from 'axios';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
@@ -14,10 +15,11 @@ import MainCard from 'ui-component/cards/MainCard';
 const ExternalJobList = () => {
     const [step, setStep] = useState(1); // NEW
     const floatRegx = /^\d*\.?\d*$/
+    const user_id = JSON.parse(localStorage.getItem("userData"))?.id || null
     const [jobDetails, setJobDetails] = useState({
         job_title: "", job_description: "", job_category: "", priority_skills: "",
         expeirence_from: "", expeirence_to: "", experience_type: "", location: "",
-        budget_from: "", budget_to: "", notice_period: "", hiring_process: "",
+        budget_from: "", budget_to: "", notice_period: "", hiring_process: [],
         job_duration_from: null, job_duration_to: null, interview_date_from: null, interview_date_to: null,
         // EXAMPLE second page fields
     });
@@ -29,13 +31,29 @@ const ExternalJobList = () => {
 
     const handleQuestionChange = (index, field, value) => {
         const updated = [...questionArray];
-        const updatedErrosArray = [...errorsArray]
+        const updatedErrorsArray = [...errorsArray];
+      
         updated[index][field] = value;
-        updatedErrosArray[index][field] = "";
-        if(field === "answerType") updated[index]['answer'] = ""
+      
+        if (!updatedErrorsArray[index]) {
+          updatedErrorsArray[index] = {};
+        }
+      
+        if (updatedErrorsArray[index][field]) {
+          updatedErrorsArray[index][field] = "";
+        }
+      
+        // Clear 'answer' if 'answerType' is changed
+        if (field === "answerType") {
+          updated[index]['answer'] = "";
+          updatedErrorsArray[index]['answer'] = "";
+        }
+      
         setQuestionArray(updated);
-        setErrorsArray(updatedErrosArray)
-    };
+        setErrorsArray(updatedErrorsArray);
+      };
+      
+
 
     const handleAdd = () => {
         setQuestionArray([...questionArray, { question: '', answer: '', answerType: '' }]);
@@ -70,9 +88,9 @@ const ExternalJobList = () => {
             "notice_period", "hiring_process", "job_duration_from", "job_duration_to",
             "interview_date_from", "interview_date_to", "budget_from", "budget_to"
         ];
-        if (validateFields(fieldsPage1)) {
+        // if (validateFields(fieldsPage1)) {
         setStep(2);
-        }
+        // }
     };
 
     const validationStep2 = () => {
@@ -105,14 +123,30 @@ const ExternalJobList = () => {
         }
         return true
     }
-
+    console.log("questionArray ",user_id)
     const handleFinalSubmit = () => {
         const validation = validationStep2()
         console.log("validation ",validation)
-        if(validation) console.log('questionArray ',questionArray)
+        if(validation) {
+            let obj1 = {...jobDetails, id:user_id, interview_date_from: moment(jobDetails?.interview_date_from).format('YYYY-MM-DD'), interview_date_to: moment(jobDetails?.interview_date_to).format('YYYY-MM-DD'), job_duration_from: moment(jobDetails?.job_duration_from).format('YYYY-MM-DD'), job_duration_to: moment(jobDetails?.job_duration_to).format('YYYY-MM-DD') };
+            obj1.screen_questions = [...questionArray]
+            // console.log('questionArray ',questionArray)
+            console.log("Final Submitted Values:", obj1);
+            makePost(obj1)
+            // console.log()
+        }
        
-        console.log("Final Submitted Values:", jobDetails);
+       
     };
+
+    const makePost = async(reqData) => {
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}internal-job`, reqData)
+            console.log("response ")
+        } catch(error) {
+            console.log("what so error ",error)
+        }
+    }
 
     const handleChange = (e, field) => {
         const value = field ? e : e.target.value;
@@ -246,12 +280,12 @@ const ExternalJobList = () => {
                         {/* Hiring Process */}
                         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                             <Typography sx={{ fontWeight: "500" }}>Hiring Process</Typography>
-                            <TextField
-                                select
+                            <Select
+                                multiple
                                 value={jobDetails.hiring_process}
                                 name='hiring_process'
                                 onChange={(e) => handleChange(e.target.value, 'hiring_process')}
-                                error={Boolean(errors.hiring_process)}
+                                // error={Boolean(errors.hiring_process)}
                             >
                                 <MenuItem value="Screen Call">Screen Call</MenuItem>
                                 <MenuItem value="Skill Fit">Skill Fit</MenuItem>
@@ -260,7 +294,7 @@ const ExternalJobList = () => {
                                 <MenuItem value="Cross Fit">Cross Fit</MenuItem>
                                 <MenuItem value="Panel Interview">Panel Interview</MenuItem>
                                 <MenuItem value="Final HR">Final HR</MenuItem>
-                            </TextField>
+                            </Select>
                             {errors.hiring_process && <ErrorField>{errors.hiring_process}</ErrorField>}
                         </Box>
 

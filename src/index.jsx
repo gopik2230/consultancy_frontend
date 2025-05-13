@@ -24,6 +24,7 @@ import '@fontsource/poppins/700.css';
 
 import 'assets/scss/style.scss';
 import reportWebVitals from 'reportWebVitals';
+import { SnackbarProvider } from 'notistack';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
@@ -31,7 +32,9 @@ const store = configureStore({ reducer });
 
 root.render(
   <Provider store={store}>
-      <App />
+    <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+     <App />
+    </SnackbarProvider>
   </Provider>
 );
 

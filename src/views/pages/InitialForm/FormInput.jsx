@@ -91,6 +91,11 @@ const FormInput = ({ ...others }) => {
    }
   }
 
+  const handleUseAnotherAccount = () => {
+    localStorage.clear()
+    navigate('/login')
+  }
+
   return (
     <>
       <Grid container direction="column" justifyContent="center" spacing={2}>
@@ -247,6 +252,9 @@ const FormInput = ({ ...others }) => {
                     Continue
                     </Button>
                 </AnimateButton>
+                </Box>
+                <Box sx={{ mt: 2, width:"100%", display:"flex", justifyContent:"center" }}>
+                      <Button variant='secondary' onClick={handleUseAnotherAccount}>Use another account</Button>
                 </Box>
             </Grid>
           </form>

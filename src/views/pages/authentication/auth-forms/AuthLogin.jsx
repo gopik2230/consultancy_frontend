@@ -19,6 +19,7 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+import useToast from 'ui-component/Toast';
 
 // third party
 import * as Yup from 'yup';
@@ -42,6 +43,7 @@ const AuthLogin = ({ ...others }) => {
   const customization = useSelector((state) => state.customization);
   const [checked, setChecked] = useState(true);
   const navigate = useNavigate()
+  const showToast = useToast();
 
 
   const googleHandler = async () => {
@@ -72,11 +74,13 @@ const AuthLogin = ({ ...others }) => {
           navigate('/initialForm')
         } else {
           navigate('/')
+          showToast(response?.data?.message , 'success')
         }
         
       }
     } catch(error) {
         console.log("error ",error)
+        showToast(error?.response?.data?.message || "Something went wrong", 'error')
     }
   }
 
