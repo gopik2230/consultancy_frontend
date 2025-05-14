@@ -8,6 +8,7 @@ import EducationForm from './profileForm/EducationForm';
 import CertificationsForm from './profileForm/CertificationForm';
 import ProjectsForm from './profileForm/ProjectsForm';
 import AdditionalSectionsForm from './profileForm/AdditionalSectionsForm';
+import PreviewDetails from './profileForm/PreviewDetails';
 
 const sections = {
   contact: 'Contact Information',
@@ -17,7 +18,8 @@ const sections = {
   education: 'Education',
   certification: 'Certification',
   project: 'Projects',
-  additionalSections: 'Additional Sections'
+  additionalSections: 'Additional Sections',
+  Preview:"Preview"
 };
 
 const Profile = () => {
@@ -36,14 +38,15 @@ const Profile = () => {
 
       case 'education':
         return <EducationForm />;
-      case 'experience':
-        return <ProfessionalExperienceForm />;
+    
       case 'certification':
         return <CertificationsForm />;
       case 'project':
         return <ProjectsForm />;
       case 'additionalSections':
         return <AdditionalSectionsForm />;
+        case "Preview":
+          return <PreviewDetails/>
       default:
         return null;
     }

@@ -11,6 +11,7 @@ import LogoSection from '../LogoSection';
 import SearchSection from './SearchSection';
 import NotificationSection from './NotificationSection';
 import ProfileSection from './ProfileSection';
+import Logo from "../../../assets/images/logo/MainLogo.png"
 
 // assets
 import { IconMenu2 } from '@tabler/icons-react';
@@ -33,7 +34,16 @@ const Header = ({ handleLeftDrawerToggle }) => {
         }}
       >
         <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
-          <LogoSection />
+    <Box
+            component="img"
+            src={Logo}
+            alt="Logo"
+            sx={{
+              width: 140,
+             
+            }}
+          />
+          
         </Box>
         <ButtonBase sx={{ borderRadius: '8px', overflow: 'hidden' }}>
           <Avatar

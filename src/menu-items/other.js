@@ -1,8 +1,8 @@
 // assets
-import { IconBrandChrome, IconHelp } from '@tabler/icons-react';
+import { IconBrandChrome, IconHelp,IconHome,IconUserCircle,IconId } from '@tabler/icons-react';
 
 // constant
-const icons = { IconBrandChrome, IconHelp };
+const icons = { IconBrandChrome, IconHelp,IconHome,IconUserCircle,IconId};
 
 // ==============================|| CLIENT MENU ||============================== //
 
@@ -54,7 +54,7 @@ const candidateMenu = {
       title: 'Dashboard',
       type: 'item',
       url: '/candidate',
-      icon: icons.IconBrandChrome,
+      icon: icons.IconHome,
       breadcrumbs: false
     },
     {
@@ -62,7 +62,7 @@ const candidateMenu = {
       title: 'Profile',
       type: 'item',
       url: '/candidate/profile',
-      icon: icons.IconBrandChrome,
+      icon: icons.IconUserCircle,
       breadcrumbs: true
     },
     {
@@ -70,7 +70,7 @@ const candidateMenu = {
       title: 'Skills',
       type: 'item',
       url: '/candidate/skills',
-      icon: icons.IconBrandChrome,
+      icon: icons.IconId,
       breadcrumbs: true
     }
   ]
