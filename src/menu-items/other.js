@@ -26,6 +26,13 @@ const sideMenu = {
 
       children: [
         {
+          id: 'jobList',
+          title: 'Jobs',
+          type: 'item',
+          url: '/jobs/list',
+          breadcrumbs: false
+        },
+        {
           id: 'jobPostInternal',
           title: 'Job Post Internal',
           type: 'item',

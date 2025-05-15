@@ -9,18 +9,9 @@ import { useEffect } from 'react';
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const Home = () => {
-  const getApi = async() => {
-    try {
-        const getres = await axios.get(`${import.meta.env.VITE_APP_BASE_URL}internal/list`)
-        console.log("getres ",getres)
-    } catch(err) {
-      console.log("err ",err)
-    }
-  }
 
-  useEffect(() => {
-    getApi()
-  },[])
+
+
   console.log("main as")
   return(
   <MainCard title="Sample Card">

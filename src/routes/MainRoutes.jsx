@@ -21,6 +21,7 @@ import AuthLogin from 'views/pages/authentication/auth-forms/AuthLogin';
 const HomePage = Loadable(lazy(() => import('views/pages/Home')));
 const InternalJob = Loadable(lazy(() => import('views/pages/CreateJob/Internal/addJob')));
 const ExternalJob = Loadable(lazy(() => import('views/pages/CreateJob/External/addJob')));
+const JobList = Loadable(lazy(() => import('views/pages/CreateJob/JobList')));
 const token = localStorage.getItem('token')
 console.log("token ",token)
 // ==============================|| MAIN ROUTING ||============================== //
@@ -119,6 +120,16 @@ const MainRoutes = {
         }
       ]
     },
+    {
+      path: 'jobs',
+      children: [
+        {
+          path: 'list',
+          element: <JobList />
+        }
+      ]
+    },
+    
     // {
     //   path: 'jobPost',
     //   children: [

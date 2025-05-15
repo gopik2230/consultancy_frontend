@@ -1,4 +1,4 @@
-import { Typography, MenuItem, TextField, Select, Box, RadioGroup, Radio, FormControlLabel, Button, Card, IconButton } from '@mui/material';
+import { Typography, MenuItem, TextField,Chip, Stack, Select, Box, RadioGroup, Radio, FormControlLabel, Button, Card, IconButton } from '@mui/material';
 import moment from 'moment';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -9,9 +9,23 @@ import { useState } from 'react';
 import { AddCircle, RemoveCircle } from '@mui/icons-material';
 import axios from 'axios';
 import useToast from 'ui-component/Toast';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { post } from 'utils/api';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
+
+const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      ['link'],
+    ]
+  };
+  
 
 const ExternalJobList = () => {
     const [step, setStep] = useState(1); // NEW
@@ -19,7 +33,7 @@ const ExternalJobList = () => {
     const floatRegx = /^\d*\.?\d*$/
     const user_id = JSON.parse(localStorage.getItem("userData"))?.id || null
     const [jobDetails, setJobDetails] = useState({
-        job_title: "", job_description: "", job_category: "", priority_skills: "",
+        job_title: "", job_description: "", job_category: "", priority_skills: [],
         expeirence_from: "", expeirence_to: "", experience_type: "", location: "",
         budget_from: "", budget_to: "", notice_period: "", hiring_process: [],
         job_duration_from: null, job_duration_to: null, interview_date_from: null, interview_date_to: null,
@@ -30,6 +44,28 @@ const ExternalJobList = () => {
     const [questionArray, setQuestionArray] = useState([
         { question: '', answer: '', answerType: '' }
     ]);
+    const [currentSkill, setCurrentSkill] = useState("");
+
+    const handleSkillChange = (e) => {
+        setCurrentSkill(e.target.value);
+    };
+
+    const handleAddSkill = () => {
+        if (currentSkill.trim() && !jobDetails.priority_skills.includes(currentSkill.trim())) {
+            setJobDetails({
+                ...jobDetails,
+                priority_skills: [...jobDetails.priority_skills, currentSkill.trim()]
+            });
+            setCurrentSkill("");
+        }
+    };
+
+    const handleDeleteSkill = (skillToDelete) => () => {
+        setJobDetails({
+            ...jobDetails,
+            priority_skills: jobDetails.priority_skills.filter(skill => skill !== skillToDelete)
+        });
+    };
 
     const handleQuestionChange = (index, field, value) => {
         const updated = [...questionArray];
@@ -143,7 +179,7 @@ const ExternalJobList = () => {
 
     const makePost = async(reqData) => {
         try {
-            const response = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}internal-job`, reqData)
+            const response = await post(`${import.meta.env.VITE_APP_BASE_URL}internal-job`, reqData)
             console.log("response ")
             if(response?.data?.message) {
                 showToast(response?.data?.message , 'success')
@@ -156,13 +192,22 @@ const ExternalJobList = () => {
     }
 
     const handleChange = (e, field) => {
-        const value = field ? e : e.target.value;
-        const name = field || e.target.name;
-        console.log('namevaleu ', name, value)
-        setJobDetails(prev => ({ ...prev, [name]: value }));
+        if(field == "job_description") {
+            console.log("edses  ",e, field)
+            setJobDetails(prev => ({ ...prev, [field]: e }));
+            setErrors(prev => ({ ...prev, [field]: '' }));
+        } else {
+            const value = field ? e : e.target.value;
+            const name = field || e.target.name;
+            console.log('namevaleu ', name, value)
+            
+            setJobDetails(prev => ({ ...prev, [name]: value }));
+            // Clear error immediately for this field
+            setErrors(prev => ({ ...prev, [name]: '' }));
+        }
 
-        // Clear error immediately for this field
-        setErrors(prev => ({ ...prev, [name]: '' }));
+
+        
     };
 
 
@@ -175,7 +220,7 @@ const ExternalJobList = () => {
                     <Box sx={{ display: "flex", flexDirection: "column", width: { xs: "100%", sm: "45%" }, gap: 2 }}>
                         {/* (your first page fields - as you wrote earlier) */}
                         {/* Job Title, Job Description etc */}
-                        {[{ label: 'Job Title', name: 'job_title' }, { label: 'Job Description', name: 'job_description' }, { label: 'Job Category', name: 'job_category' }, { label: 'Top Priority Skills', name: 'priority_skills' }].map((item) => (
+                        {[{ label: 'Job Title', name: 'job_title' }, { label: 'Job Category', name: 'job_category' }].map((item) => (
                             <Box key={item.name} sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                                 <Typography sx={{ fontWeight: "500" }}>{item.label}</Typography>
                                 <TextField
@@ -188,6 +233,60 @@ const ExternalJobList = () => {
                                 {errors[item.name] && <ErrorField>{errors[item.name]}</ErrorField>}
                             </Box>
                         ))}
+                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mb:5 }}>
+                            <ReactQuill
+                                    theme="snow"
+                                    value={jobDetails?.job_description}
+                                    onChange={(e) => handleChange(e, 'job_description')}
+                                    style={{ height: '200px', marginBottom: '50px' }}
+                                    modules={modules}
+                                />
+                        </Box>
+
+                        <Box sx={{ mb: 2 }}>
+                            <Box sx={{display:"flex", justifyContent:"center", alignItems:"flex-start", gap:2}}>
+                                <TextField
+                                    value={currentSkill}
+                                    onChange={handleSkillChange}
+                                    label="Add Priority Skill"
+                                    helperText="Type a skill and click 'Add'"
+                                    sx={{ flexGrow: 1 }}
+                                    onKeyPress={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleAddSkill();
+                                        }
+                                    }}
+                                />
+                                <Button 
+                                    variant="contained" 
+                                    onClick={handleAddSkill}
+                                    disabled={!currentSkill.trim()}
+                                >
+                                    Add
+                                </Button>
+                            </Box>
+                
+                            <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
+                            {jobDetails?.priority_skills.map((skill, index) => (
+                                <Chip
+                                    key={index}
+                                    label={skill}
+                                    onDelete={handleDeleteSkill(skill)}
+                                    color="primary"  // This sets the primary color
+                                    sx={{ 
+                                        color: 'white', // White text for better contrast
+                                        '& .MuiChip-deleteIcon': {
+                                            color: 'white', // White delete icon
+                                            '&:hover': {
+                                                color: 'rgba(255, 255, 255, 0.8)' // Slightly transparent on hover
+                                            }
+                                        }
+                                    }}
+                                />
+                            ))}
+                        </Box>
+                    </Box>
+                        
 
                         {/* Experience */}
                         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
