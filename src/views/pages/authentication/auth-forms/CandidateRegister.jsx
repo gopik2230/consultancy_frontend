@@ -66,7 +66,7 @@ const CandidateRegister = ({ ...others }) => {
   const handleSignup = async(values) => {
     let reqData = {...values, role_id: 1}; // role_id 1 for candidate
     try {
-      const response = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}signup`, reqData);
+      const response = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}candidate-signup`, reqData);
       if(response?.status === 201) {
         navigate('/login');
       }
