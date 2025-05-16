@@ -16,6 +16,7 @@ const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
 // const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons')));
 
 import AuthLogin from 'views/pages/authentication/auth-forms/AuthLogin';
+import ClientDashboard from 'views/pages/CreateJob/ClientDashboard';
 
 // sample page routing
 const HomePage = Loadable(lazy(() => import('views/pages/Home')));
@@ -40,16 +41,7 @@ const MainRoutes = {
       children: [
         {
           path: 'default',
-          element: <HomePage />
-        }
-      ]
-    },
-    {
-      path: 'utils',
-      children: [
-        {
-          path: 'util-typography',
-          element: <UtilsTypography />
+          element: <ClientDashboard />
         }
       ]
     },
@@ -71,37 +63,10 @@ const MainRoutes = {
         }
       ]
     },
-    // {
-    //   path: 'icons',
-    //   children: [
-    //     {
-    //       path: 'tabler-icons',
-    //       element: <UtilsTablerIcons />
-    //     }
-    //   ]
-    // },
-    // {
-    //   path: 'icons',
-    //   children: [
-    //     {
-    //       path: 'material-icons',
-    //       element: <UtilsMaterialIcons />
-    //     }
-    //   ]
-    // },
     {
       path: 'sample-page',
       element: <HomePage />
     },
-    // {
-    //   path: 'jobPost',
-    //   children: [
-    //     {
-    //       path: 'internal',
-    //       element: <InternalJob />
-    //     }
-    //   ]
-    // },
     {
       path: 'jobPost',
       children: [
@@ -130,15 +95,6 @@ const MainRoutes = {
       ]
     },
     
-    // {
-    //   path: 'jobPost',
-    //   children: [
-    //     {
-    //       path: 'external',
-    //       element: <ExternalJob />
-    //     }
-    //   ]
-    // },
   ]
 };
 

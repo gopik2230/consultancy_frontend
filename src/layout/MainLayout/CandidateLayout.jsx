@@ -55,7 +55,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' && pr
 
 // ==============================|| MAIN LAYOUT ||============================== //
 
-const MainLayout = () => {
+const CandidateLayout = () => {
   console.log("header ", localStorage.getItem('token'))
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
@@ -120,4 +120,4 @@ const MainLayout = () => {
   );
 };
 
-export default MainLayout;
+export default CandidateLayout;

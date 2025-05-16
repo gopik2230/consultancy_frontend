@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 // material-ui
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
+import {Stack, Tabs, Tab, Box   } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -14,6 +14,7 @@ import AuthCardWrapper from '../AuthCardWrapper';
 import Logo from 'ui-component/Logo';
 import AuthRegister from '../authentication/auth-forms/AuthRegister';
 import AuthFooter from 'ui-component/cards/AuthFooter';
+import CandidateRegister from '../authentication/auth-forms/CandidateRegister';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -26,6 +27,7 @@ const Register = () => {
   const navigate = useNavigate()
   const token = localStorage.getItem('token')
   const [loading, setLoading] = useState(true)
+  const [value, setValue] = useState('candidate');
 
   useEffect(() => {
     if(token) {
@@ -34,6 +36,10 @@ const Register = () => {
       setLoading(false)
     }
   },[token])
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   return (
     <>
@@ -51,17 +57,32 @@ const Register = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <Grid container direction={{ xs: 'column-reverse', md: 'row' }} alignItems="center" justifyContent="center">
-                      <Grid item>
                         <Stack alignItems="center" justifyContent="center" spacing={1}>
                           <Typography color="secondary.main" gutterBottom variant={downMD ? 'h3' : 'h2'}>
                             Sign up
                           </Typography>
                         </Stack>
-                      </Grid>
                     </Grid>
                   </Grid>
                   <Grid item xs={12}>
-                    <AuthRegister />
+                        <Grid container justifyContent="center" sx={{ marginBlock: '20px' }}>
+                          <Grid item>
+                            <Tabs
+                              value={value}
+                              onChange={handleChange}
+                              textColor="secondary"
+                              indicatorColor="secondary"
+                              aria-label="secondary tabs example"
+                            >
+                              <Tab value="candidate" label="Candidate" />
+                              <Tab value="client" label="Client" />
+                            </Tabs>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                  <Grid item xs={12}>
+                    {value === 'candidate' && <CandidateRegister />}
+                    {value === 'client' && <AuthRegister />}
                   </Grid>
                   <Grid item xs={12}>
                     <Divider />

@@ -27,7 +27,7 @@ const modules = {
   };
   
 
-const ExternalJobList = () => {
+const InternalJob = () => {
     const [step, setStep] = useState(1); // NEW
     const showToast = useToast();
     const floatRegx = /^\d*\.?\d*$/
@@ -538,4 +538,4 @@ const ExternalJobList = () => {
     );
 };
 
-export default ExternalJobList;
+export default InternalJob;
