@@ -37,7 +37,7 @@ import { useNavigate } from 'react-router-dom';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
-const AuthLogin = ({ ...others }) => {
+const AuthLogin = ({ role,...others }) => {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const customization = useSelector((state) => state.customization);
@@ -62,9 +62,12 @@ const AuthLogin = ({ ...others }) => {
   };
 
   const handleLogin = async(values) => {
-    console.log('env ',import.meta.env.VITE_APP_BASE_URL+'login', values)
+    let reqData = {...values, role_id: role === "candidate" ? 1 : 2};
+    console.log("reqData ",reqData)
+  
+    console.log('env ',import.meta.env.VITE_APP_BASE_URL+'login', reqData)
     try {
-      const response = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}login`, values)
+      const response = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}login`, reqData)
       console.log("response login ",response)
       if(response?.status == 200) {
         localStorage.setItem('token', response?.data?.token)
@@ -73,7 +76,8 @@ const AuthLogin = ({ ...others }) => {
         if(response?.data?.user?.initial_user) {
           navigate('/initialForm')
         } else {
-          navigate('/')
+          // navigate('/')
+          window.location.href = '/';
           showToast(response?.data?.message , 'success')
         }
         

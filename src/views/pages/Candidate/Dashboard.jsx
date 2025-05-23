@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Grid,
@@ -21,6 +21,7 @@ import {
 } from '@mui/material';
 import { Business, LocationOn, AccessTime, AttachMoney, Search, Tune, BookmarkBorder, Share } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { get } from 'utils/api';
 
 const jobs = [
   {
@@ -87,6 +88,19 @@ const jobs = [
 
 const Dashboard = () => {
   const navigate =useNavigate()
+  useEffect(() => {
+    getJobList()
+  },[])
+
+  const getJobList = async() => {
+    try {
+      const response = await get(`${import.meta.env.VITE_APP_BASE_URL}internal-job/list`)
+      console.log("resposne ",response)
+    } catch(err) {
+      console.log("erro ",err)
+    }
+  }
+
   return (
     <Box
       sx={{

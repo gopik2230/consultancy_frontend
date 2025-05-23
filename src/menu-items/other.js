@@ -1,8 +1,8 @@
 // assets
-import { IconBrandChrome, IconHelp,IconHome,IconUserCircle,IconId } from '@tabler/icons-react';
+import { IconBrandChrome, IconHelp,IconHome,IconUserCircle,IconId,IconBriefcase } from '@tabler/icons-react';
 
 // constant
-const icons = { IconBrandChrome, IconHelp,IconHome,IconUserCircle,IconId};
+const icons = { IconBrandChrome, IconHelp,IconHome,IconUserCircle,IconId,IconBriefcase};
 
 // ==============================|| CLIENT MENU ||============================== //
 
@@ -15,14 +15,14 @@ const clientMenu = {
       title: 'Dashboard',
       type: 'item',
       url: '/',
-      icon: icons.IconBrandChrome,
+      icon: icons.IconHome,
       breadcrumbs: false
     },
     {
       id: 'createJob',
       title: 'Create Job',
       type: 'collapse',
-      icon: icons.IconBrandChrome,
+      icon: icons.IconBriefcase,
       children: [
         {
           id: 'jobList',
@@ -35,15 +35,15 @@ const clientMenu = {
           id: 'jobPostInternal',
           title: 'Job Post Internal',
           type: 'item',
-          url: '/jobPost/internal',
-          breadcrumbs: true
+          url: '/job/internal',
+          breadcrumbs: false
         },
         {
           id: 'jobPostExternal',
           title: 'Job Post External',
           type: 'item',
-          url: '/jobPost/external',
-          breadcrumbs: true
+          url: '/job/external',
+          breadcrumbs: false
         }
       ]
     }

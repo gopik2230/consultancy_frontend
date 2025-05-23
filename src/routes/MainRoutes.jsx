@@ -17,6 +17,8 @@ const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
 
 import AuthLogin from 'views/pages/authentication/auth-forms/AuthLogin';
 import ClientDashboard from 'views/pages/CreateJob/ClientDashboard';
+import InternalJobList from 'views/pages/CreateJob/Internal';
+import ExternalJobList from 'views/pages/CreateJob/External';
 
 // sample page routing
 const HomePage = Loadable(lazy(() => import('views/pages/Home')));
@@ -34,7 +36,7 @@ const MainRoutes = {
   children: [
     {
       path: '/',
-      element:  <HomePage /> 
+      element:  <ClientDashboard /> 
     },
     {
       path: 'dashboard',
@@ -68,11 +70,29 @@ const MainRoutes = {
       element: <HomePage />
     },
     {
+      path: 'job',
+      children: [
+        {
+          path: 'internal',
+          element: <InternalJobList />
+        }
+      ]
+    },
+    {
       path: 'jobPost',
       children: [
         {
           path: 'internal',
           element: <InternalJob />
+        }
+      ]
+    },
+    {
+      path: 'job',
+      children: [
+        {
+          path: 'external',
+          element: <ExternalJobList />
         }
       ]
     },

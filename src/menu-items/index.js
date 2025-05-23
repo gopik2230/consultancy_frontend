@@ -9,8 +9,10 @@ import { getRoleName } from 'utils/common';
 
 const roleId = JSON.parse(localStorage.getItem("userData"))?.role_id || ""
 const roleName = getRoleName(roleId);
+const sideMenuItems = getSideMenu(roleName);
+console.log("sideMenuItems ",sideMenuItems)
 const menuItems = {
-  items: [ getSideMenu(roleName)]
+  items: [sideMenuItems ]
 };
 
 export default menuItems;

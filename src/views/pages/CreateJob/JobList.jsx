@@ -40,7 +40,7 @@ const JobList = () => {
     const getApi = async () => {
         setLoading(true);
         try {
-            const response = await get(`${import.meta.env.VITE_APP_BASE_URL}job/list`);
+            const response = await get(`${import.meta.env.VITE_APP_BASE_URL}internal-job/list`);
             setJobList(response?.data?.jobs || []);
         } catch (error) {
             console.error("Error fetching jobs:", error);

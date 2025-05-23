@@ -80,7 +80,7 @@ const Login = () => {
                         </Grid>
                       </Grid>
                       <Grid item xs={12}>
-                        <AuthLogin />
+                        <AuthLogin role={value} />
                       </Grid>
                       <Grid item xs={12}>
                         <Divider />
