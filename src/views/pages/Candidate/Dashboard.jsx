@@ -87,6 +87,7 @@ const jobs = [
 
 const Dashboard = () => {
   const navigate =useNavigate()
+  const [activeTab, setActiveTab] = React.useState('applied');
   return (
     <Box
       sx={{
@@ -104,6 +105,162 @@ const Dashboard = () => {
           px: { xs: 2, sm: 3 }
         }}
       >
+      <Card 
+  sx={{ 
+    mb: 4,
+    borderRadius: 3,
+    boxShadow: '0 8px 32px rgba(94, 53, 177, 0.3)',
+    position: 'relative',
+    overflow: 'hidden',
+    minHeight: '200px',
+    display: 'flex',
+    alignItems: 'center',
+    backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center 30%',
+    color: 'white',
+    transition: 'transform 0.3s ease',
+    '&:hover': {
+      transform: 'translateY(-2px)'
+    }
+  }}
+>
+  <CardContent sx={{ 
+    zIndex: 1, 
+    width: '100%',
+    p: 4,
+    textShadow: '0 2px 4px rgba(0,0,0,0.5)'
+  }}>
+    <Typography 
+      variant="h3" 
+      fontWeight="bold" 
+      gutterBottom
+      sx={{
+        fontSize: { xs: '1.8rem', sm: '2.2rem', md: '2.5rem' },
+        color: 'white',
+        lineHeight: 1.2,
+        mb: 2
+      }}
+    >
+      Welcome Back, Gopi! 👋
+    </Typography>
+    <Typography 
+      variant="h5" 
+      sx={{ 
+        mb: 3, 
+        fontWeight: 500,
+        fontSize: { xs: '1.1rem', sm: '1.3rem' },
+        color: 'rgba(255,255,255,0.95)',
+        maxWidth: '600px'
+      }}
+    >
+      Your dream career starts today with <span style={{ 
+        fontWeight: 700, 
+        color: 'white',
+        textShadow: '0 2px 4px rgba(94, 53, 177, 0.7)'
+      }}>Hirezo</span>
+    </Typography>
+    <Button 
+      variant="contained" 
+      size="large"
+      sx={{ 
+        backgroundColor: 'white', 
+        color: '#5E35B1',
+        borderRadius: 2,
+        px: 4,
+        py: 1.5,
+        fontWeight: 700,
+        fontSize: '1rem',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+        '&:hover': {
+          backgroundColor: '#EDE7F6',
+          boxShadow: '0 6px 20px rgba(0,0,0,0.4)',
+          transform: 'translateY(-2px)'
+        },
+        transition: 'all 0.3s ease'
+      }}
+    >
+      Complete Your Profile →
+    </Button>
+  </CardContent>
+</Card>
+   <Box 
+          sx={{ 
+            display: 'flex', 
+            gap: 2, 
+            mb: 4,
+            flexWrap: 'wrap',
+            '& > *': {
+              flex: '1 1 200px'
+            }
+          }}
+        >
+          {[
+            { id: 'applied', label: 'Applied Jobs', value: '1/3' },
+            { id: 'saved', label: 'Saved Jobs', value: '12' },
+            { id: 'interviews', label: 'My Interviews', value: '1/5' },
+            { id: 'views', label: 'Profile Views', value: '24' }
+          ].map((tab) => (
+            <Paper 
+              key={tab.id}
+              elevation={0}
+              onClick={() => setActiveTab(tab.id)}
+              sx={{
+                p: 2,
+                borderRadius: 2,
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                background: 
+                  'rgba(255, 255, 255, 0.7)',
+                backdropFilter: 'blur(8px)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                position: 'relative',
+                overflow: 'hidden',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 4px 20px rgba(94, 53, 177, 0.1)'
+                },
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: activeTab === tab.id ? '4px' : '0px',
+                  background: 'linear-gradient(90deg, #5E35B1 0%, #4527A0 100%)',
+                  transition: 'height 0.3s ease'
+                }
+              }}
+            >
+              <Typography variant="body2" color="text.secondary">
+                {tab.label}
+              </Typography>
+              <Typography variant="h5" fontWeight="bold" color="#5E35B1">
+                {tab.value}
+              </Typography>
+              {activeTab === tab.id && (
+                <Box 
+                  sx={{
+                    position: 'absolute',
+                    bottom: 8,
+                    right: 8,
+                    width: 24,
+                    height: 24,
+                    borderRadius: '50%',
+                    backgroundColor: '#5E35B1',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    fontSize: '0.75rem'
+                  }}
+                >
+                  ✓
+                </Box>
+              )}
+            </Paper>
+          ))}
+        </Box>
         <Typography
           variant="h4"
           fontWeight="bold"

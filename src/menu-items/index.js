@@ -7,7 +7,7 @@ import utilities from './utilities';
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [ getSideMenu("candidate")]
+  items: [ getSideMenu ("candidate")]
 };
 
 export default menuItems;
