@@ -1,8 +1,8 @@
 // assets
-import { IconBrandChrome, IconHelp,IconHome,IconUserCircle,IconId,IconBriefcase } from '@tabler/icons-react';
+import { IconBrandChrome, IconHelp,IconHome,IconUserCircle,IconId,IconChecklist ,IconBookmark,IconCalendarEvent,IconEye,IconMessages,IconBriefcase} from '@tabler/icons-react';
 
 // constant
-const icons = { IconBrandChrome, IconHelp,IconHome,IconUserCircle,IconId,IconBriefcase};
+const icons = { IconBrandChrome, IconHelp,IconHome,IconUserCircle,IconId,IconChecklist,IconBookmark,IconCalendarEvent,IconEye,IconMessages,IconBriefcase};
 
 // ==============================|| CLIENT MENU ||============================== //
 
@@ -64,22 +64,57 @@ const candidateMenu = {
       icon: icons.IconHome,
       breadcrumbs: false
     },
+   
+     {
+      id: 'applied-jobs',
+      title: 'Applied Jobs (1/3)',
+      type: 'item',
+      url: '/candidate/applied-jobs',
+      icon: icons.IconChecklist,
+      breadcrumbs: true
+    },
+    {
+      id: 'saved-jobs',
+      title: 'Saved Jobs (12)',
+      type: 'item',
+      url: '/candidate/saved-jobs',
+      icon: icons.IconBookmark,
+      breadcrumbs: true
+    },
+     {
+      id: 'track-application',
+      title: 'Track-application',
+      type: 'item',
+      url: '/candidate/Track-application',
+      icon: icons.IconChecklist,
+      breadcrumbs: true
+    },
+    {
+      id: 'interviews',
+      title: 'My Interviews (1/5)',
+      type: 'item',
+      url: '/candidate/interviews',
+      icon: icons.IconCalendarEvent,
+      breadcrumbs: true
+    },
+    {
+      id: 'profile-views',
+      title: 'Profile Views (24)',
+      type: 'item',
+      url: '/candidate/profile-views',
+      icon: icons.IconEye,
+      breadcrumbs: true
+    },
+   
     {
       id: 'profile',
-      title: 'Profile',
+      title: 'My Profile',
       type: 'item',
       url: '/candidate/profile',
       icon: icons.IconUserCircle,
       breadcrumbs: true
     },
-    {
-      id: 'skills',
-      title: 'Skills',
-      type: 'item',
-      url: '/candidate/skills',
-      icon: icons.IconId,
-      breadcrumbs: true
-    }
+   
   ]
 };
 
