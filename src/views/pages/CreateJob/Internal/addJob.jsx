@@ -126,9 +126,9 @@ const InternalJob = () => {
             "notice_period", "hiring_process", "job_duration_from", "job_duration_to",
             "interview_date_from", "interview_date_to", "budget_from", "budget_to"
         ];
-        // if (validateFields(fieldsPage1)) {
+        if (validateFields(fieldsPage1)) {
         setStep(2);
-        // }
+        }
     };
 
     const validationStep2 = () => {
