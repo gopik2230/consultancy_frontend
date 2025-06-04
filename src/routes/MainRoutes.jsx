@@ -75,7 +75,7 @@ const MainRoutes = {
         {
           path: 'internal',
           element: <InternalJobList />
-        }
+        },
       ]
     },
     {
@@ -83,6 +83,10 @@ const MainRoutes = {
       children: [
         {
           path: 'internal',
+          element: <InternalJob />
+        },
+        {
+          path: 'internal/edit-job/:id',
           element: <InternalJob />
         }
       ]

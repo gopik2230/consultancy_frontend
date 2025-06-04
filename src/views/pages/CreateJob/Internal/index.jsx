@@ -173,7 +173,7 @@ const InternalJobList = () => {
     };
 
     const handleEdit = (jobId) => {
-        navigate(`/edit-job/${jobId}`);
+        navigate(`/jobPost/internal/edit-job/${jobId}`);
         handleMenuClose();
     };
 

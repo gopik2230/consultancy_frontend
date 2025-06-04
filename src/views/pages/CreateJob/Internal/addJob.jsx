@@ -5,16 +5,18 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ErrorField from 'ui-component/ErrorField';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AddCircle, RemoveCircle } from '@mui/icons-material';
 import axios from 'axios';
 import useToast from 'ui-component/Toast';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { post } from 'utils/api';
+import { get, post } from 'utils/api';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
+import { useParams } from 'react-router-dom';
+import AuthWrapper1 from 'views/pages/AuthWrapper1';
 
 const modules = {
     toolbar: [
@@ -29,7 +31,9 @@ const modules = {
 
 const InternalJob = () => {
     const [step, setStep] = useState(1); // NEW
+    const {id} = useParams()
     const showToast = useToast();
+    const [loading, setLoading] = useState(false)
     const floatRegx = /^\d*\.?\d*$/
     const user_id = JSON.parse(localStorage.getItem("userData"))?.id || null
     const [jobDetails, setJobDetails] = useState({
@@ -45,6 +49,23 @@ const InternalJob = () => {
         { question: '', answer: '', answerType: '' }
     ]);
     const [currentSkill, setCurrentSkill] = useState("");
+
+    useEffect(() => {
+        if(id)  getJobById(id)
+    },[id])
+
+    const getJobById = async() => {
+        try {
+            setLoading(true)
+            const response = await get(`${import.meta.env.VITE_APP_BASE_URL}internal-job/${id}`);
+            console.log("response ",response)
+            
+        } catch(error) {
+            console.log("error getJobById ",error)
+        } finally {
+            setLoading(false)
+        }   
+    }
 
     const handleSkillChange = (e) => {
         setCurrentSkill(e.target.value);
